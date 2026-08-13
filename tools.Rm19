@@ -1,0 +1,232 @@
+# ==============================================================================
+# PROGRAM UTAMA NP RM19  (30 FITUR LENGKAP)
+# Hak Cipta (c) 2026 Mr.Rm19 | github.com/Rm19x
+# ==============================================================================
+
+cetak("==================================================================")
+cetak("            WELCOME TO NP RM19 Tools					             ")
+cetak("             Pengembang : " + penulis)
+cetak("             GitHub     : " + github)
+cetak("==================================================================")
+cetak("")
+
+cetak("PILIH KATEGORI UTAMA:")
+cetak("[1] Tools Pengolahan Media (MP3, MP4, Gambar, Subtitle)")
+cetak("[2] Tools Web SEO & Analisis Situs")
+cetak("[3] Tools Code Obfuscation & Security")
+cetak("[4] Keluar")
+cetak("")
+
+pilihan = masukan("Masukkan pilihan kategori (1-4): ")
+
+# ==============================================================================
+# KATEGORI 1: TOOLS PENGOLAHAN MEDIA (17 FITUR)
+# ==============================================================================
+jika pilihan == "1":
+    cetak("\n=== MENU PENGOLAHAN MEDIA ===")
+    cetak("[1]  Menyatukan File MP3 (MP3 Merger)")
+    cetak("[2]  Menyatukan Klip Video MP4 (Video Joiner)")
+    cetak("[3]  Konversi GIF ke Video MP4")
+    cetak("[4]  Mencerahkan Gambar (Brightness Enhancer)")
+    cetak("[5]  Atur Kontras Gambar (Contrast Adjuster)")
+    cetak("[6]  Mempertajam Gambar (Sharpener)")
+    cetak("[7]  Menempelkan Subtitle ke Video (Hardsub)")
+    cetak("[8]  Ekstrak Subtitle dari Video")
+    cetak("[9]  Geser Waktu Subtitle (SRT Sync Shift)")
+    cetak("[10] Normalisasi Volume Audio MP3")
+    cetak("[11] Ubah Kecepatan Video MP4")
+    cetak("[12] Ekstrak Frame/Foto dari Detik Video")
+    cetak("[13] Tambah Watermark Teks pada Gambar")
+    cetak("[14] Potong Tepi Video / Crop Watermark")
+    cetak("[15] Otomatis Koreksi Exposure Foto Gelap")
+    cetak("[16] Ubah Bitrate Audio MP3 (Kualitas/Ukuran)")
+    cetak("[17] Mencerahkan Banyak Gambar Sekaligus (Batch)")
+    cetak("[18] Ekstrak Suara MP3 saja dari Video MP4")
+    cetak("")
+    
+    sub = masukan("Pilih nomor fitur media yang ingin dijalankan (1-18): ")
+    
+    jika sub == "1":
+        f1 = masukan("File MP3 Pertama  : ")
+        f2 = masukan("File MP3 Kedua    : ")
+        out = masukan("Nama File Hasil   : ")
+        Tools.menyatukan_mp3([f1, f2], out)
+    lainnya:
+        jika sub == "2":
+            v1 = masukan("File Video MP4 Pertama : ")
+            v2 = masukan("File Video MP4 Kedua   : ")
+            out = masukan("Nama File Hasil Video  : ")
+            Tools.menyatukan_mp4([v1, v2], out)
+        lainnya:
+            jika sub == "3":
+                g_in = masukan("Nama File GIF        : ")
+                v_out = masukan("Nama Hasil MP4       : ")
+                Tools.gif_ke_mp4(g_in, v_out)
+            lainnya:
+                jika sub == "4":
+                    img_in = masukan("Nama File Foto Gelap : ")
+                    img_out = masukan("Nama Foto Terang     : ")
+                    Tools.mencerahkan_gambar(img_in, img_out, 1.8)
+                lainnya:
+                    jika sub == "5":
+                        img_in = masukan("Nama File Foto       : ")
+                        img_out = masukan("Nama Hasil Kontras   : ")
+                        Tools.atur_kontras_gambar(img_in, img_out, 1.5)
+                    lainnya:
+                        jika sub == "6":
+                            img_in = masukan("Nama File Foto Buram : ")
+                            img_out = masukan("Nama Hasil Tajam     : ")
+                            Tools.pertajam_gambar(img_in, img_out, 2.0)
+                        lainnya:
+                            jika sub == "7":
+                                vid = masukan("Nama File Video MP4  : ")
+                                srt = masukan("Nama File Subtitle   : ")
+                                out = masukan("Nama Video Hasil     : ")
+                                Tools.menempelkan_subtitle(vid, srt, out)
+                            lainnya:
+                                jika sub == "8":
+                                    vid = masukan("Nama File Video MP4  : ")
+                                    srt = masukan("Nama File SRT Hasil  : ")
+                                    Tools.ekstrak_subtitle(vid, srt)
+                                lainnya:
+                                    jika sub == "9":
+                                        srt = masukan("Nama File SRT        : ")
+                                        dtk = masukan("Geser Berapa Detik   : ")
+                                        out = masukan("Nama Hasil SRT       : ")
+                                        Tools.geser_waktu_srt(srt, dtk, out)
+                                    lainnya:
+                                        jika sub == "10":
+                                            mp3_in = masukan("Nama File MP3        : ")
+                                            mp3_out = masukan("Nama Hasil MP3       : ")
+                                            Tools.normalisasi_volume_mp3(mp3_in, mp3_out)
+                                        lainnya:
+                                            jika sub == "11":
+                                                vid = masukan("Nama File Video      : ")
+                                                kcp = masukan("Kecepatan (misal 1.5): ")
+                                                out = masukan("Nama Video Hasil     : ")
+                                                Tools.ubah_kecepatan_video(vid, kcp, out)
+                                            lainnya:
+                                                jika sub == "12":
+                                                    vid = masukan("Nama File Video      : ")
+                                                    dtk = masukan("Di Detik Ke-Berapa   : ")
+                                                    out = masukan("Nama File Foto Hasil : ")
+                                                    Tools.ekstrak_frame_video(vid, dtk, out)
+                                                lainnya:
+                                                    jika sub == "13":
+                                                        img = masukan("Nama File Gambar     : ")
+                                                        wm = masukan("Teks Watermark       : ")
+                                                        out = masukan("Nama Hasil Gambar    : ")
+                                                        Tools.tambah_watermark_gambar(img, wm, out)
+                                                    lainnya:
+                                                        jika sub == "14":
+                                                            vid = masukan("Nama File Video MP4  : ")
+                                                            out = masukan("Nama Hasil Crop Video: ")
+                                                            Tools.potong_watermark_video(vid, out)
+                                                        lainnya:
+                                                            jika sub == "15":
+                                                                img = masukan("Nama File Gambar     : ")
+                                                                out = masukan("Nama Hasil Koreksi   : ")
+                                                                Tools.koreksi_exposure_gambar(img, out)
+                                                            lainnya:
+                                                                jika sub == "16":
+                                                                    mp3 = masukan("Nama File MP3        : ")
+                                                                    bit = masukan("Bitrate (128k/320k)  : ")
+                                                                    out = masukan("Nama MP3 Hasil       : ")
+                                                                    Tools.konversi_bitrate_mp3(mp3, bit, out)
+                                                                lainnya:
+                                                                    jika sub == "17":
+                                                                        fld = masukan("Nama Folder Foto     : ")
+                                                                        Tools.mencerahkan_banyak_gambar(fld, 1.5)
+                                                                    lainnya:
+                                                                        jika sub == "18":
+                                                                            vid = masukan("Nama Video MP4       : ")
+                                                                            mp3 = masukan("Nama MP3 Hasil       : ")
+                                                                            Tools.ekstrak_mp3_dari_mp4(vid, mp3)
+
+# ==============================================================================
+# KATEGORI 2: TOOLS WEB SEO & ANALISIS SITUS (8 FITUR)
+# ==============================================================================
+lainnya:
+    jika pilihan == "2":
+        cetak("\n=== MENU WEB SEO & ANALISIS SITUS ===")
+        cetak("[1] Buat Sitemap XML Otomatis")
+        cetak("[2] Buat File Robots.txt")
+        cetak("[3] Analisa SEO Meta Tag Halaman Web")
+        cetak("[4] Analisa Struktur Heading (H1, H2) Web")
+        cetak("[5] Cek Broken Link (Link Mati) pada URL")
+        cetak("[6] Hitung Kepadatan Kata Kunci (Keyword Density)")
+        cetak("[7] Verifikasi Tag Canonical")
+        cetak("[8] Helper Penerjemah File Subtitle SRT")
+        cetak("")
+        
+        sub = masukan("Pilih nomor fitur SEO yang ingin dijalankan (1-8): ")
+        
+        jika sub == "1":
+            url = masukan("Masukkan URL Website Target : ")
+            Tools.buat_sitemap_xml([url], "sitemap.xml")
+        lainnya:
+            jika sub == "2":
+                Tools.buat_robotstxt("robots.txt")
+            lainnya:
+                jika sub == "3":
+                    url = masukan("Masukkan URL Web : ")
+                    Tools.analisa_seo_meta(url)
+                lainnya:
+                    jika sub == "4":
+                        url = masukan("Masukkan URL Web : ")
+                        Tools.analisa_struktur_heading(url)
+                    lainnya:
+                        jika sub == "5":
+                            url = masukan("Masukkan URL Web : ")
+                            Tools.cek_broken_link(url)
+                        lainnya:
+                            jika sub == "6":
+                                teks = masukan("Tuliskan Artikel/Teks   : ")
+                                kata = masukan("Kata Kunci yang Dicari : ")
+                                Tools.hitung_kepadatan_kata(teks, kata)
+                            lainnya:
+                                jika sub == "7":
+                                    url = masukan("Masukkan URL Web : ")
+                                    Tools.verifikasi_canonical_tag(url)
+                                lainnya:
+                                    jika sub == "8":
+                                        srt = masukan("Nama File SRT    : ")
+                                        out = masukan("Nama SRT Hasil   : ")
+                                        Tools.bantu_terjemah_srt(srt, out)
+
+# ==============================================================================
+# KATEGORI 3: TOOLS CODE OBFUSCATION & SECURITY (5 FITUR)
+# ==============================================================================
+    lainnya:
+        jika pilihan == "3":
+            cetak("\n=== MENU CODE OBFUSCATION & SECURITY ===")
+            cetak("[1] Acak Kode .Rm19 (Code Obfuscator)")
+            cetak("[2] Perkecil Ukuran Skrip .Rm19 (Minifier)")
+            cetak("[3] Rapikan Kembali Kode (Formatter)")
+            cetak("[4] Jalankan Full Suite CLI System")
+            cetak("")
+            
+            sub = masukan("Pilih nomor fitur obfuscation (1-4): ")
+            
+            jika sub == "1":
+                kode = masukan("Masukkan Kode .Rm19 yang Ingin Diacak: ")
+                cetak("\nHasil Obfuscation:")
+                cetak(Tools.acak_kode_rm19(kode))
+            lainnya:
+                jika sub == "2":
+                    kode = masukan("Masukkan Kode .Rm19 yang Ingin Diminify: ")
+                    cetak("\nHasil Minifier:")
+                    cetak(Tools.minifier_skrip(kode))
+                lainnya:
+                    jika sub == "3":
+                        kode = masukan("Masukkan Kode .Rm19: ")
+                        cetak(Tools.rapikan_kode(kode))
+                    lainnya:
+                        jika sub == "4":
+                            Tools.eksekusi_cli_suite()
+        lainnya:
+            cetak("\nTerima kasih telah menggunakan Np Rm19 Tools!")
+
+cetak("\n==================================================================")
+cetak(" Selesai! Copyright (c) 2026 Mr.Rm19 | github.com/Rm19x")
+cetak("==================================================================")
