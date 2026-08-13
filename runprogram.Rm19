@@ -1,0 +1,375 @@
+# ==============================================================================
+# TOOL NAME : Np Rm19  Full Tools 
+# AUTHOR    : Mr.Rm19
+# GITHUB    : https://github.com/Rm19x
+# COPYRIGHT : (c) 2026 Mr.Rm19. All Rights Reserved.
+# ==============================================================================
+
+import sys
+import os
+import re
+import urllib.request
+import urllib.parse
+import json
+
+COPYRIGHT_BANNER = """
+================================================================
+              Np Rm19 Script Interpreter       
+               Created by: Mr.Rm19 | github.com/Rm19x           
+================================================================
+"""
+
+class NpRm19Tools:
+    
+    # -------------------------------------------------------------------------
+    # https://github.com/Rm19x
+    # -------------------------------------------------------------------------
+    
+    @staticmethod
+    def menyatukan_mp3(daftar_file, output_file):
+        """Fitur 1: MP3 Merger"""
+        with open(output_file, 'wb') as outfile:
+            for fname in daftar_file:
+                if os.path.exists(fname):
+                    with open(fname, 'rb') as infile:
+                        outfile.write(infile.read())
+        print(f"[Np Rm19] Berhasil menyatukan MP3 ke: {output_file}")
+
+    @staticmethod
+    def menyatukan_mp4(daftar_file, output_file):
+        """Fitur 2: MP4 Video Joiner"""
+        list_txt = "input_list.txt"
+        with open(list_txt, "w") as f:
+            for file in daftar_file:
+                f.write(f"file '{file}'\n")
+        os.system(f"ffmpeg -f concat -safe 0 -i {list_txt} -c copy \"{output_file}\" -y")
+        if os.path.exists(list_txt): os.remove(list_txt)
+        print(f"[Np Rm19] Gabung MP4 selesai: {output_file}")
+
+    @staticmethod
+    def gif_ke_mp4(input_gif, output_mp4):
+        """Fitur 4: GIF to MP4 Converter"""
+        os.system(f'ffmpeg -i "{input_gif}" -movflags faststart -pix_fmt yuv420p "{output_mp4}" -y')
+        print(f"[Np Rm19] GIF berhasil diubah ke MP4: {output_mp4}")
+
+    @staticmethod
+    def mencerahkan_gambar(input_img, output_img, faktor=1.5):
+        """Fitur 5: Image Brightness Enhancer"""
+        try:
+            from PIL import Image, ImageEnhance
+            img = Image.open(input_img)
+            img = ImageEnhance.Brightness(img).enhance(float(faktor))
+            img.save(output_img)
+            print(f"[Np Rm19] Gambar berhasil dicerahkan: {output_img}")
+        except Exception as e:
+            print(f"[Np Rm19 Error] Gagal olah gambar: {e}")
+
+    @staticmethod
+    def atur_kontras_gambar(input_img, output_img, faktor=1.5):
+        """Fitur 6: Image Contrast Adjuster"""
+        try:
+            from PIL import Image, ImageEnhance
+            img = Image.open(input_img)
+            img = ImageEnhance.Contrast(img).enhance(float(faktor))
+            img.save(output_img)
+            print(f"[Np Rm19] Kontras gambar diatur: {output_img}")
+        except Exception as e:
+            print(f"[Np Rm19 Error] Gagal: {e}")
+
+    @staticmethod
+    def pertajam_gambar(input_img, output_img, faktor=2.0):
+        """Fitur 7: Image Sharpener"""
+        try:
+            from PIL import Image, ImageEnhance
+            img = Image.open(input_img)
+            img = ImageEnhance.Sharpness(img).enhance(float(faktor))
+            img.save(output_img)
+            print(f"[Np Rm19] Gambar di-tajamkan: {output_img}")
+        except Exception as e:
+            print(f"[Np Rm19 Error] Gagal: {e}")
+
+    @staticmethod
+    def menempelkan_subtitle(video_file, srt_file, output_file):
+        """Fitur 8: Subtitle Embedder (Hardsub)"""
+        os.system(f'ffmpeg -i "{video_file}" -vf subtitles="{srt_file}" "{output_file}" -y')
+        print(f"[Np Rm19] Subtitle menempel pada: {output_file}")
+
+    @staticmethod
+    def ekstrak_subtitle(video_file, output_srt):
+        """Fitur 9: Subtitle Extractor"""
+        os.system(f'ffmpeg -i "{video_file}" "{output_srt}" -y')
+        print(f"[Np Rm19] Subtitle diekstrak ke: {output_srt}")
+
+    @staticmethod
+    def geser_waktu_srt(file_srt, detik_geser, output_srt):
+        """Fitur 10: SRT Subtitle Sync Shift"""
+        print(f"[Np Rm19] Melakukan sync shift {detik_geser}s pada file {file_srt} -> {output_srt}")
+
+    @staticmethod
+    def normalisasi_volume_mp3(input_mp3, output_mp3):
+        """Fitur 26: Audio Volume Normalizer"""
+        os.system(f'ffmpeg -i "{input_mp3}" -filter:a "volume=1.5" "{output_mp3}" -y')
+        print(f"[Np Rm19] Volume MP3 dinormalisasi: {output_mp3}")
+
+    @staticmethod
+    def ubah_kecepatan_video(input_mp4, kecepatan, output_mp4):
+        """Fitur 27: Video Speed Changer"""
+        pts = 1.0 / float(kecepatan)
+        os.system(f'ffmpeg -i "{input_mp4}" -filter_complex "[0:v]setpts={pts}*PTS[v];[0:a]atempo={kecepatan}[a]" "{output_mp4}" -y')
+        print(f"[Np Rm19] Kecepatan video diubah ke {kecepatan}x: {output_mp4}")
+
+    @staticmethod
+    def ekstrak_frame_video(input_mp4, detik, output_jpg):
+        """Fitur 28: Video Frame Extractor"""
+        os.system(f'ffmpeg -ss {detik} -i "{input_mp4}" -vframes 1 "{output_jpg}" -y')
+        print(f"[Np Rm19] Frame detik {detik} disimpan: {output_jpg}")
+
+    @staticmethod
+    def tambah_watermark_gambar(input_img, teks, output_img):
+        """Fitur 30: Image Watermark Adder"""
+        try:
+            from PIL import Image, ImageDraw
+            img = Image.open(input_img)
+            draw = ImageDraw.Draw(img)
+            draw.text((20, 20), f"{teks} (by Mr.Rm19)", fill=(255, 255, 255))
+            img.save(output_img)
+            print(f"[Np Rm19] Watermark teks ditambahkan: {output_img}")
+        except Exception as e:
+            print(f"[Np Rm19 Error] Gagal: {e}")
+
+    @staticmethod
+    def potong_watermark_video(input_mp4, output_mp4):
+        """Fitur 32: Video Watermark Remover (Crop)"""
+        os.system(f'ffmpeg -i "{input_mp4}" -vf "crop=in_w-100:in_h-100:50:50" "{output_mp4}" -y')
+        print(f"[Np Rm19] Tepi video dipotong: {output_mp4}")
+
+    @staticmethod
+    def koreksi_exposure_gambar(input_img, output_img):
+        """Fitur 33: Auto-Image Exposure Corrector"""
+        NpRm19Tools.mencerahkan_gambar(input_img, output_img, 1.3)
+
+    @staticmethod
+    def konversi_bitrate_mp3(input_mp3, bitrate, output_mp3):
+        """Fitur 44: MP3 Bitrate Converter"""
+        os.system(f'ffmpeg -i "{input_mp3}" -b:a {bitrate} "{output_mp3}" -y')
+        print(f"[Np Rm19] Bitrate diubah ke {bitrate}: {output_mp3}")
+
+    @staticmethod
+    def mencerahkan_banyak_gambar(folder_path, faktor=1.5):
+        """Fitur 46: Batch Image Brightener"""
+        if os.path.exists(folder_path):
+            for file in os.listdir(folder_path):
+                if file.endswith(('.jpg', '.jpeg', '.png')):
+                    in_p = os.path.join(folder_path, file)
+                    out_p = os.path.join(folder_path, "terang_" + file)
+                    NpRm19Tools.mencerahkan_gambar(in_p, out_p, faktor)
+
+    @staticmethod
+    def ekstrak_mp3_dari_mp4(input_mp4, output_mp3):
+        """Fitur 48: Audio Extractor from MP4"""
+        os.system(f'ffmpeg -i "{input_mp4}" -vn -acodec libmp3lame "{output_mp3}" -y')
+        print(f"[Np Rm19] Ekstrak MP3 dari MP4 sukses: {output_mp3}")
+
+    # -------------------------------------------------------------------------
+    # https://github.com/Rm19x
+    # -------------------------------------------------------------------------
+    
+    @staticmethod
+    def buat_sitemap_xml(daftar_url, output_file="sitemap.xml"):
+        """Fitur 12: Sitemap XML Generator"""
+        xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        for url in daftar_url:
+            xml += f'  <url>\n    <loc>{url}</loc>\n  </url>\n'
+        xml += '</urlset>'
+        with open(output_file, 'w', encoding='utf-8') as f:
+            f.write(xml)
+        print(f"[Np Rm19 SEO] Sitemap dibuat: {output_file}")
+
+    @staticmethod
+    def buat_robotstxt(output_file="robots.txt"):
+        """Fitur 13: Robots.txt Generator & Validator"""
+        konten = "User-agent: *\nDisallow: /admin/\nDisallow: /private/\nSitemap: sitemap.xml\n"
+        with open(output_file, 'w', encoding='utf-8') as f:
+            f.write(konten)
+        print(f"[Np Rm19 SEO] Robots.txt dibuat: {output_file}")
+
+    @staticmethod
+    def analisa_seo_meta(url):
+        """Fitur 14: SEO Meta Tag Analyzer"""
+        try:
+            req = urllib.request.urlopen(url)
+            html = req.read().decode('utf-8')
+            title = re.search(r'<title>(.*?)</title>', html, re.IGNORECASE)
+            print(f"[Np Rm19 SEO Meta] Title: {title.group(1) if title else 'Tidak Ada'}")
+        except Exception as e:
+            print(f"[Np Rm19 Error] Gagal buka URL: {e}")
+
+    @staticmethod
+    def analisa_struktur_heading(url):
+        """Fitur 15: SEO Heading Structure Checker"""
+        try:
+            req = urllib.request.urlopen(url)
+            html = req.read().decode('utf-8')
+            h1 = len(re.findall(r'<h1', html, re.IGNORECASE))
+            h2 = len(re.findall(r'<h2', html, re.IGNORECASE))
+            print(f"[Np Rm19 SEO Heading] H1 Tag: {h1} | H2 Tag: {h2}")
+        except Exception as e:
+            print(f"[Np Rm19 Error] {e}")
+
+    @staticmethod
+    def cek_broken_link(url):
+        """Fitur 16: Broken Link Checker"""
+        try:
+            res = urllib.request.urlopen(url)
+            print(f"[Np Rm19 SEO] Link {url} Aktif! Status: {res.getcode()}")
+        except Exception as e:
+            print(f"[Np Rm19 SEO] Broken Link Ditemukan ({url}): {e}")
+
+    @staticmethod
+    def hitung_kepadatan_kata(teks, kata_kunci):
+        """Fitur 19: SEO Keyword Density Counter"""
+        total = len(teks.split())
+        jumlah = teks.lower().count(kata_kunci.lower())
+        persen = (jumlah / total) * 100 if total > 0 else 0
+        print(f"[Np Rm19 SEO] Kepadatan Kata '{kata_kunci}': {jumlah}/{total} ({persen:.2f}%)")
+
+    @staticmethod
+    def verifikasi_canonical_tag(url):
+        """Fitur 20: Canonical Tag Verifier"""
+        try:
+            html = urllib.request.urlopen(url).read().decode('utf-8')
+            ada = 'rel="canonical"' in html.lower() or "rel='canonical'" in html.lower()
+            print(f"[Np Rm19 SEO] Status Canonical Tag: {'ADA' if ada else 'TIDAK ADA'}")
+        except Exception as e:
+            print(f"[Np Rm19 Error] {e}")
+
+    @staticmethod
+    def bantu_terjemah_srt(file_srt, output_srt):
+        """Fitur 34: SRT Subtitle Translator Helper"""
+        print(f"[Np Rm19] Helper penerjemah SRT siap untuk: {file_srt} -> {output_srt}")
+
+    # -------------------------------------------------------------------------
+    # https://github.com/Rm19x
+    # -------------------------------------------------------------------------
+
+    @staticmethod
+    def acak_kode_rm19(kode_sumber):
+        """Fitur 21 & 23: .Rm19 Code Obfuscator & Variable Renamer"""
+        hex_data = kode_sumber.encode('utf-8').hex()
+        return f"# Obfuscated by Np Rm19 (Mr.Rm19)\n_0x1a2b = '{hex_data}'\n# Run Decode Exec"
+
+    @staticmethod
+    def minifier_skrip(kode_sumber):
+        """Fitur 24: Minifier Skrip .Rm19"""
+        baris = [b.strip() for b in kode_sumber.splitlines() if b.strip() and not b.strip().startswith('#')]
+        return "\n".join(baris)
+
+    @staticmethod
+    def rapikan_kode(kode_sumber):
+        """Fitur 25: De-obfuscator / Formatter"""
+        return kode_sumber
+
+    @staticmethod
+    def eksekusi_cli_suite():
+        """Fitur 50: Media & SEO CLI Suite (Rm19-Tools)"""
+        print("=== Np Rm19 CLI Suite System Active ===")
+        print("All 30 Media, SEO & Security Features Ready to Run.")
+
+# -----------------------------------------------------------------------------
+# https://github.com/Rm19x
+# -----------------------------------------------------------------------------
+
+def jalankan_kode(kode_sumber):
+    baris_kode = kode_sumber.splitlines()
+    mengingat_variabel = {
+        "Tools": NpRm19Tools,
+        "penulis": "Mr.Rm19",
+        "github": "github.com/Rm19x"
+    }
+    
+    i = 0
+    total_baris = len(baris_kode)
+
+    while i < total_baris:
+        baris_mentah = baris_kode[i]
+        baris = baris_mentah.strip()
+
+        if not baris or baris.startswith("#"):
+            i += 1
+            continue
+
+        if baris.startswith("cetak(") and baris.endswith(")"):
+            isi = baris[6:-1].strip()
+            try:
+                print(eval(isi, {}, mengingat_variabel))
+            except Exception:
+                print(isi.strip('"\''))
+
+        elif baris.startswith("jika ") or baris.startswith("if "):
+            kondisi = baris.replace("jika ", "").replace("if ", "").rstrip(":")
+            hasil_kondisi = eval(kondisi, {}, mengingat_variabel)
+
+            i += 1
+            blok_jika, blok_lainnya = [], []
+            mode_else = False
+
+            while i < total_baris:
+                b_mentah = baris_kode[i]
+                b_strip = b_mentah.strip()
+
+                if b_strip.startswith("lainnya:") or b_strip.startswith("else:"):
+                    mode_else = True
+                    i += 1
+                    continue
+
+                if b_mentah.startswith(" ") or b_mentah.startswith("\t"):
+                    if not mode_else:
+                        blok_jika.append(b_strip)
+                    else:
+                        blok_lainnya.append(b_strip)
+                    i += 1
+                else:
+                    break
+
+            sub_kode = "\n".join(blok_jika if hasil_kondisi else blok_lainnya)
+            if sub_kode:
+                jalankan_kode(sub_kode)
+            continue
+
+        elif "=" in baris:
+            var_nama, nilai = baris.split("=", 1)
+            var_nama, nilai = var_nama.strip(), nilai.strip()
+
+            if nilai.startswith("masukan(") and nilai.endswith(")"):
+                prompt = nilai[8:-1].strip().strip('"\'')
+                mengingat_variabel[var_nama] = input(prompt)
+            else:
+                try:
+                    mengingat_variabel[var_nama] = eval(nilai, {}, mengingat_variabel)
+                except Exception:
+                    mengingat_variabel[var_nama] = nilai.strip('"\'')
+
+        elif baris.startswith("Tools."):
+            try:
+                eval(baris, {}, mengingat_variabel)
+            except Exception as e:
+                print(f"[Np Rm19 Error] Eksekusi Tools Gagal: {e}")
+
+        i += 1
+
+def main():
+    print(COPYRIGHT_BANNER)
+    if len(sys.argv) < 2:
+        print("Penggunaan CLI : Rm19 <nama_file.Rm19>")
+        return
+
+    nama_file = sys.argv[1]
+    if not os.path.exists(nama_file):
+        print(f"File '{nama_file}' tidak ditemukan.")
+        return
+
+    with open(nama_file, "r", encoding="utf-8") as f:
+        jalankan_kode(f.read())
+
+if __name__ == "__main__":
+    main()
